@@ -1,0 +1,65 @@
+{
+    "users": [{
+        "userId": "1",
+        "enabled": true,
+        "firstname": "John",
+        "lastname": "DOE",
+        "firstDay": "2021-16-01",
+        "cycleDay": "3",
+        "cycleAmount": "USER_CYCLEAMOUNT",
+        "cycles": [{
+            "cycleId": "1",
+            "days": [{
+                    "dayId": "1",
+                    "tasks": [{
+                            "taskId": "1",
+                            "taskType": "2",
+                            "subType": "5",
+                            "taskPriority": "1",
+                            "taskDone": "1"
+                        },
+                        {
+                            "taskId": "2",
+                            "taskType": "2",
+                            "subType": "4",
+                            "taskPriority": "2",
+                            "taskDone": "0"
+                        },
+                        {
+                            "taskId": "3",
+                            "taskType": "1",
+                            "subType": "4",
+                            "taskPriority": "2",
+                            "taskDone": "1"
+                        }
+                    ]
+                },
+                {
+                    "dayId": "2",
+                    "tasks": [{
+                            "taskId": "1",
+                            "taskType": "4",
+                            "subType": "2",
+                            "taskPriority": "3",
+                            "taskDone": "2"
+                        },
+                        {
+                            "taskId": "2",
+                            "taskType": "2",
+                            "subType": "4",
+                            "taskPriority": "2",
+                            "taskDone": "2"
+                        },
+                        {
+                            "taskId": "3",
+                            "taskType": "1",
+                            "subType": "4",
+                            "taskPriority": "2",
+                            "taskDone": "2"
+                        }
+                    ]
+                }
+            ]
+        }]
+    }]
+}
