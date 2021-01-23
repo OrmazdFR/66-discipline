@@ -7,7 +7,9 @@
         "firstname": "John",
         "lastname": "DOE",
         "score": 4565,
-        "firstDay": "2021-16-01",
+        "firstDay": 1611360005,
+        "lastCheck": 1611400465,
+        "nextCheck": 1611471600,
         "cycleDay": 3,
         "cycleAmount": 10,
         "cycles": [{
@@ -15,23 +17,23 @@
             "days": [{
                     "dayId": 1,
                     "tasks": [{
-                            "taskId": 1,
-                            "taskType": 2,
-                            "subType": 5,
+                            "taskCyId": 1,
+                            "taskCat": 2,
+                            "taskSub": 5,
                             "taskPriority": 1,
                             "taskDone": 1
                         },
                         {
-                            "taskId": 2,
-                            "taskType": 2,
-                            "subType": 4,
+                            "taskCyId": 2,
+                            "taskCat": 2,
+                            "taskSub": 4,
                             "taskPriority": 2,
                             "taskDone": 0
                         },
                         {
-                            "taskId": 3,
-                            "taskType": 1,
-                            "subType": 4,
+                            "taskCyId": 3,
+                            "taskCat": 1,
+                            "taskSub": 4,
                             "taskPriority": 2,
                             "taskDone": 1
                         }
@@ -40,23 +42,23 @@
                 {
                     "dayId": 2,
                     "tasks": [{
-                            "taskId": 1,
-                            "taskType": 4,
-                            "subType": 2,
+                            "taskCyId": 1,
+                            "taskCat": 4,
+                            "taskSub": 2,
                             "taskPriority": 3,
                             "taskDone": 2
                         },
                         {
-                            "taskId": 2,
-                            "taskType": 2,
-                            "subType": 4,
+                            "taskCyId": 2,
+                            "taskCat": 2,
+                            "taskSub": 4,
                             "taskPriority": 2,
                             "taskDone": 2
                         },
                         {
-                            "taskId": 3,
-                            "taskType": 1,
-                            "subType": 4,
+                            "taskCyId": 3,
+                            "taskCat": 1,
+                            "taskSub": 4,
                             "taskPriority": 2,
                             "taskDone": 2
                         }
