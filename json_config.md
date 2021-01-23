@@ -6,6 +6,7 @@ userid      | 1          | Here, it would be the first user
 enabled     | true       | 
 firstname   | John       |
 lastname    | DOE        |
+score       | 5700       | The score of the user
 firstDay    | 2021-16-01 | Beginning of the disciplining (yyyy-mm-dd format, maybe we should go with 'seconds since 1970-01-01')
 cycleDay    | 3          | 1 = Monday, 2 = Tuesday, etc
 cycleAmount | 10         | 10*7 = 77 days. 3 would have been 21 days

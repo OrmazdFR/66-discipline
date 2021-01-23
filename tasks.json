@@ -1,0 +1,119 @@
+{
+    "categories": [{
+        "categoryId": 1,
+        "categoryName": "Sport",
+        "tasks": [{
+            "taskId": 1,
+            "taskName": "Do 10 push-ups",
+            "taskScore": 20
+        }, {
+            "taskId": 2,
+            "taskName": "Do 20 push-ups",
+            "taskScore": 30
+        }, {
+            "taskId": 3,
+            "taskName": "Do 30 push-ups",
+            "taskScore": 40
+        }, {
+            "taskId": 4,
+            "taskName": "Do 40 push-ups",
+            "taskScore": 50
+        }, {
+            "taskId": 5,
+            "taskName": "Do 50 push-ups",
+            "taskScore": 60
+        }, {
+            "taskId": 6,
+            "taskName": "Do 100 push-ups",
+            "taskScore": 150
+        }, {
+            "taskId": 7,
+            "taskName": "Do 20 jumping jacks",
+            "taskScore": 10
+        }, {
+            "taskId": 8,
+            "taskName": "Do 30 jumping jacks",
+            "taskScore": 20
+        }, {
+            "taskId": 9,
+            "taskName": "Do 50 jumping jacks",
+            "taskScore": 30
+        }, {
+            "taskId": 10,
+            "taskName": "Do the plank for 20 seconds",
+            "taskScore": 20
+        }, {
+            "taskId": 11,
+            "taskName": "Do the plank for 30 seconds",
+            "taskScore": 30
+        }, {
+            "taskId": 12,
+            "taskName": "Do the plank for 1 minute",
+            "taskScore": 75
+        }, {
+            "taskId": 13,
+            "taskName": "Do the plank for more than 2 minutes",
+            "taskScore": 200
+        }, {
+            "taskId": 14,
+            "taskName": "Swim for 10 minutes",
+            "taskScore": 50
+        }, {
+            "taskId": 15,
+            "taskName": "Swim for 30 minutes",
+            "taskScore": 100
+        }
+        ]
+    }, {
+        "categoryId": 2,
+        "categoryName": "Health",
+        "tasks": [{
+            "taskId": 1,
+            "taskName": "Eat a healthy meal",
+            "taskScore": 100
+        }, {
+            "taskId": 2,
+            "taskName": "Take a shower",
+            "taskScore": 5
+        }, {
+            "taskId": 3,
+            "taskName": "Brush your teeth after each meal",
+            "taskScore": 10
+        }, {
+            "taskId": 4,
+            "taskName": "Do not smoke",
+            "taskScore": 30
+        }
+        ]
+    }, {
+        "categoryId": 3,
+        "categoryName": "Social",
+        "tasks": [{
+            "taskId": 1,
+            "taskName": "Send a message to a friend you did not text for a long time",
+            "taskScore": 50
+        }, {
+            "taskId": 2,
+            "taskName": "Call a friend you did not call for a long time",
+            "taskScore": 75
+        }, {
+            "taskId": 3,
+            "taskName": "Call your parents",
+            "taskScore": 76
+        }, {
+            "taskId": 4,
+            "taskName": "Call your grandparents",
+            "taskScore": 77
+        }, {
+            "taskId": 5,
+            "taskName": "Talk to a stranger",
+            "taskScore": 100
+        }, {
+            "taskId": 6,
+            "taskName": "Go somewhere with a friend",
+            "taskScore": 100
+        }
+        ]
+    }
+    ]
+}

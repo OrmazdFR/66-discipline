@@ -2,7 +2,7 @@
 ## What is 66-discipline ?
 66-discipline is an app developped in C, made as a school project.
 
-Requirements were to use an SGBD library. We decided to go with json-c, which will be used to manage our users, and we also used ImageMagick, an image library to create a GUI. We might change this last lib to another, made for GUI (such as GTK).
+Requirements were to use an SGBD library. We decided to go with json-c, which will be used to manage our users, and we will also be using GTK
 
 
 ## Why is it called 66-discipline
