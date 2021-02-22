@@ -9,7 +9,7 @@ Requirements were to use an SGBD library. We decided to go with json-c, which wi
 Studies have shown that the human brain needs in average **66 days to make/brake an habit**. And wether you create or brake one, you need **discipline**.
 
 ## How does it work?
-You choose **how long** you want to take to improve yourself, **what tasks** you want to do each day, and wether they are **optionnal or mandatory**, then you come back every day to check if you have done them.
+You choose **how long** you want to take to improve yourself, **what tasks** you want to do each day, and wether they are **optional or mandatory**, then you come back every day to check if you have done them.
 
 You must be **honest with yourself** and tell when the tasks have not been accomplished, as well as coming every day. That is the whole point of the app, after all! If you don't come back every day, all tasks between last time you came and the time you're back will be counted as failed (so you will be losing points as well).
 
@@ -17,10 +17,10 @@ Everytime you finish a task your score goes up. **The more tasks you sucessfully
 
 But be carefull, **not doing mandatory tasks will make you lose points!**.
 
-## Tasks can be optionnal or mandatory?
+## Tasks can be optional or mandatory?
 Yes. Actually, 3 kinds of tasks exist:
 - **Mandatory.** They reward more points, but if you don't do them, they make you lose as much. Use them if you really want to change something about yourself. High risk, high profit.
 - **Normal.** They reward you a basic amount of points, but if you don't do them, you lose some points. Less rewarding, but also less punitive. Those are made to 
-- **Optionnal.** They reward a few points. If you don't do them, you don't lose points. Those are like "bonus" tasks, that might compensate points lost to other tasks.
+- **Optional.** They reward a few points. If you don't do them, you don't lose points. Those are like "bonus" tasks, that might compensate points lost to other tasks.
 
 Don't worry, all of this will be reminded when you chose a task.

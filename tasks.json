@@ -62,8 +62,7 @@
             "taskId": 15,
             "taskName": "Swim for 30 minutes",
             "taskScore": 100
-        }
-        ]
+        }]
     }, {
         "categoryId": 2,
         "categoryName": "Health",
@@ -83,8 +82,7 @@
             "taskId": 4,
             "taskName": "Do not smoke",
             "taskScore": 30
-        }
-        ]
+        }]
     }, {
         "categoryId": 3,
         "categoryName": "Social",
@@ -112,8 +110,6 @@
             "taskId": 6,
             "taskName": "Go somewhere with a friend",
             "taskScore": 100
-        }
-        ]
-    }
-    ]
+        }]
+    }]
 }
