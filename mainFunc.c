@@ -1,8 +1,8 @@
+#include <json-c/json.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <C:\src\vcpkg\installed\x86-windows\include\json-c/json.h>
 
 int hmMin(time_t timeToCheck)
 {
@@ -25,9 +25,9 @@ int hmWeeks(time_t timeToCheck)
     return timeToCheck / (60 * 60 * 24 * 7);
 }
 
-int todayHour(time_t currentTime)
+int whourInDay(time_t timeToCheck)
 {
-    return ((currentTime - ((currentTime / 86400) * 86400)) / 3600) + 1;
+    return ((timeToCheck - ((timeToCheck / 86400) * 86400)) / 3600) + 1;
 }
 
 time_t getNextCheckValue(time_t currentTime)
@@ -37,7 +37,7 @@ time_t getNextCheckValue(time_t currentTime)
     time_t nextCheckValue;
 
     today = hmDays(currentTime);
-    hToday = todayHour(currentTime);
+    hToday = whourInDay(currentTime);
     if (hToday <= 8)
     {
         return nextCheckValue = (today * 86400) + 25200;
@@ -50,6 +50,7 @@ time_t getNextCheckValue(time_t currentTime)
 
 int main(int argc, char **argv)
 {
+    printf("Hello World!");
     // unsigned short chosenUser = 65532;
     // short usersArray[10] = displayUsers(0);
     // int lostScore = 0;
@@ -157,19 +158,19 @@ json_object *weekPlanning()
             }
             if (categoryChoice != 999 || taskChoice != 999 || priority != 999)
             {
-                taskCy = json_object_new_int64(taskCyId);
+                taskCy = json_object_new_int(taskCyId);
                 json_object_object_add(taskObject, "taskCyId", taskCy);
 
-                taskCat = json_object_new_int64(categoryChoice - 1);
+                taskCat = json_object_new_int(categoryChoice - 1);
                 json_object_object_add(taskObject, "taskCat", taskCat);
 
-                taskSub = json_object_new_int64(taskChoice - 1);
+                taskSub = json_object_new_int(taskChoice - 1);
                 json_object_object_add(taskObject, "taskSub", taskSub);
 
-                taskPriority = json_object_new_int64(priority - 1);
+                taskPriority = json_object_new_int(priority - 1);
                 json_object_object_add(taskObject, "taskPriority", taskPriority);
 
-                taskDone = json_object_new_int64(2);
+                taskDone = json_object_new_int(2);
                 json_object_object_add(taskObject, "taskDone", taskDone);
 
                 json_object_array_add(userTasks, taskObject);
@@ -178,7 +179,7 @@ json_object *weekPlanning()
             scanf("%d", &exitCode);
         } while (exitCode != 999);
 
-        dayId = json_object_new_int64(day);
+        dayId = json_object_new_int(day);
         json_object_object_add(dayObject, "dayId", dayId);
 
         json_object_object_add(dayObject, "tasks", userTasks);
@@ -229,11 +230,11 @@ void createUser()
      * I will not take it off
      * until I finally append it
      */
-    newUser = json_object_new_object();  // Yes, I'm talking about this value
+    newUser = json_object_new_object(); // Yes, I'm talking about this value
 
     //Auto-increment userId.
     userAmount = json_object_array_length(users);
-    userId = json_object_new_int64(userAmount);
+    userId = json_object_new_int(userAmount);
     json_object_object_add(newUser, "userId", userId);
 
     //Set "enabled" to 'true' (enabled)
@@ -253,7 +254,7 @@ void createUser()
     json_object_object_add(newUser, "lastname", lastname);
 
     //Set "score" to 100 (score)
-    score = json_object_new_int(100);
+    score = json_object_new_int64(100);
     json_object_object_add(newUser, "score", score);
 
     //Set "firstDay" to current time :
@@ -283,7 +284,7 @@ void createUser()
     cycleObject = json_object_new_object();
 
     //Defines the first cycleId
-    cycleId = json_object_new_int64(1);
+    cycleId = json_object_new_int(1);
     json_object_object_add(cycleObject, "cycleId", cycleId);
 
     //The user will then have to fill his first cycle (week) => weekPlanning();
@@ -294,7 +295,8 @@ void createUser()
     //Adds the cycleObject to the cycles array
     json_object_array_add(cycles, days);
 
-    
+    // FINALLY appending newUser
+    json_object_array_add(users, newUser);
 }
 
 void deleteUser(unsigned short userId)
@@ -350,9 +352,9 @@ json_object *displayUsers(unsigned char doOutput)
             //Display the number, firstname, lastname and score IF output != 0
             if (doOutput > 0)
             {
-                printf("%hu. %s %s - %d\n", goodUsersAmount, json_object_get_string(firstname), json_object_get_string(lastname), json_object_get_int(score));
+                printf("%hu. %s %s - %I64ld\n", goodUsersAmount, json_object_get_string(firstname), json_object_get_string(lastname), json_object_get_int64(score));
             }
-            json_object_array_add(userIds,json_object_new_int(i));
+            json_object_array_add(userIds, json_object_new_int(i));
             goodUsersAmount++;
         }
     }
@@ -361,58 +363,140 @@ json_object *displayUsers(unsigned char doOutput)
 
 void autoCheck(unsigned short userId)
 {
-    time_t currentTime = time(NULL);
+    //__ users
     json_object *usjson;
-    json_object *tajson;
     json_object *users;
     json_object *userContent;
-    json_object *nextCheck;
-    int64_t nextCheckValue;
-    json_object *lastCheck;
-    int64_t lastCheckValue;
-    json_object *firstDay;
-    int64_t firstDayValue;
+    json_object *usScore;
+    int userScore = 0;
+    json_object *usCycles;
+    json_object *usCycle;
+    int usCycleIndex = 0;
+    json_object *usDays;
+    json_object *usDay;
+    int usDayIndex = 0;
+    json_object *usTasks;
+    json_object *usTask;
+    json_object *usTaskCat;
+    json_object *usTaskSub;
+    json_object *usTaskPriority;
+    json_object *usTaskDone;
+    int taskPriority;
+    int usTaskAmount;
+    int usTaskIndex = 0;
+    //__ time
+    json_object *usFirstDay;
+    int64_t firstDay;
+    int firstDayDay;
+    json_object *usLastCheck;
+    int64_t lastCheck;
+    int lastCheckDay;
+    json_object *usNextCheck;
+    int64_t nextCheck;
+    int currentlyCheckingDay;
+    time_t currentTime = time(NULL);
+    int today;
+    //__ tasks
+    json_object *tajson;
+    json_object *taCategories;
+    json_object *taCategory;
+    int taCategoryIndex = 0;
+    json_object *taTasks;
+    json_object *taTask;
+    int taTaskIndex = 0;
+    json_object *taTaskScore;
+    int taskScore;
+    //__ other vars
+    int lostScore = 0;
 
-    //Open users.json
+    // Users declarations
     usjson = json_object_from_file("users.json");
-
-    //Open tasks.json
-    tajson = json_object_from_file("tasks.json");
-
-    //Selects the good user
     json_object_object_get_ex(usjson, "users", &users);
     userContent = json_object_array_get_idx(users, userId);
+    json_object_object_get_ex(userContent, "score", &usScore);
+    json_object_object_get_ex(userContent, "cycles", &usCycles);
+    usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
+    json_object_object_get_ex(usCycle, "days", &usDays);
+    usDay = json_object_array_get_idx(usDays, usDayIndex);
+    json_object_object_get_ex(usDay, "tasks", &usTasks);
+    usTaskAmount = json_object_array_length(usTasks);
+    usTask = json_object_array_get_idx(usTasks, usTaskIndex);
 
-    //Retreives the nextCheck, lastChecked and firstDay field from the current user in users.json
-    json_object_object_get_ex(userContent, "nextCheck", &nextCheck);
-    nextCheckValue = json_object_get_int64(nextCheck);
+    json_object_object_get_ex(userContent, "firstDay", &usFirstDay);
+    firstDay = json_object_get_int64(usFirstDay);
+    firstDayDay = whourInDay(firstDay) <= 8 ? hmDays(firstDay) - 1 : hmDays(firstDay);
 
-    json_object_object_get_ex(userContent, "lastCheck", &lastCheck);
-    lastCheckValue = json_object_get_int64(lastCheck);
+    json_object_object_get_ex(userContent, "lastCheck", &usLastCheck);
+    lastCheck = json_object_get_int64(usLastCheck);
+    lastCheckDay = whourInDay(lastCheck) <= 8 ? hmDays(lastCheck) - 1 : hmDays(lastCheck);
 
-    json_object_object_get_ex(userContent, "lastCheck", &lastCheck);
-    lastCheckValue = json_object_get_int64(lastCheck);
+    json_object_object_get_ex(userContent, "nextCheck", &usNextCheck);
+    nextCheck = json_object_get_int64(usNextCheck);
 
-    if (currentTime > nextCheckValue)
+    today = whourInDay(currentTime) <= 8 ? hmDays(currentTime) - 1 : hmDays(currentTime);
+
+    // Tasks declarations
+    tajson = json_object_from_file("tasks.json");
+    json_object_object_get_ex(tajson, "categories", &taCategories);
+    taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
+    json_object_object_get_ex(taCategory, "tasks", &taTasks);
+    taTask = json_object_array_get_idx(taTasks, taTaskIndex);
+
+    if (currentTime > nextCheck)
     {
-        //   for each taskDone = 2 of the user from before this day {
-        //     check the taskCat (category) and taskCyId (taskId) in the tasks.json to retreive the taskScore
-        //     if(taskPriority == 1) {
-        //       totalScore (from users.json) -= lostScore = 2 * taskScore;
-        //     } else if (taskPriority == 2) {
-        //       totalScore (from users.json) -= lostScore = 1 * taskScore;
-        //     }
-        //     set taskDone (from users.json) to 0
-        //   }
-        //   set nextCheck to the next 8:00 am from current time
-        //   find how long has the user been absent (absentDays = currentTime - lastCheck, but translate it in days)
-        //   retreive the last dayId of the user
-        //   if(lastDayId + absentDays >= 7) {
-        //     devs, be carefull when the user will register its next cycle, it will start late
-        //     so save the weeksLateAmount (absentDays/7)
-        //     and daysInWeekLateAmount (absentDays%7)
-        //   }
-        //   if scoreLost
+        for (currentlyCheckingDay = lastCheckDay; currentlyCheckingDay < today; currentlyCheckingDay++)
+        {
+            usCycleIndex = (currentlyCheckingDay - firstDayDay) / 7;
+            usDayIndex = (currentlyCheckingDay - firstDayDay) % 7;
+
+            //Get into the good cycle
+            usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
+
+            //Check the good day
+            json_object_object_get_ex(usCycle, "days", &usDays);
+            usDay = json_object_array_get_idx(usDays, usDayIndex);
+
+            //Get to the tasks
+            json_object_object_get_ex(usDay, "tasks", &usTasks);
+            usTaskAmount = json_object_array_length(usTasks);
+
+            //Check every task
+            for (usTaskIndex = 0; usTaskIndex < usTaskAmount; usTaskIndex++)
+            {
+                usTask = json_object_array_get_idx(usTasks, usTaskIndex);
+                json_object_object_get_ex(usTask, "taskCat", &usTaskCat);
+                taCategoryIndex = json_object_get_int(usTaskCat);
+                json_object_object_get_ex(usTask, "taskSub", &usTaskSub);
+                taTaskIndex = json_object_get_int(usTaskSub);
+                json_object_object_get_ex(usTask, "taskPriority", &usTaskPriority);
+                taskPriority = json_object_get_int(usTaskPriority);
+
+                //  check the taskCat (category) and taskCyId (taskId) in the tasks.json to retreive the taskScore
+                taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
+                json_object_object_get_ex(taCategory, "tasks", &taTasks);
+                taTask = json_object_array_get_idx(taTasks, taTaskIndex);
+                json_object_object_get_ex(taTask, "taskScore", &taTaskScore);
+                taskScore = json_object_get_int(taTaskScore);
+
+                if (taskPriority == 1)
+                {
+                    lostScore += 2 * taskScore;
+                }
+                else if (taskPriority == 2)
+                {
+                    lostScore += taskScore;
+                }
+                json_object_object_get_ex(usTask, "taskDone", &usTaskDone);
+                json_object_set_int(usTaskDone, 0);
+            }
+        }
         //   display a message saying that the user lost lostScore by not validating his discipline in the app, and that he's absentDays late in his discipline
+        userScore = json_object_get_int(usScore);
+        userScore = (userScore - lostScore < 0) ? 0 : userScore - lostScore;
+        printf("\nOh no! You were absent for %d days, and you lost %d points... Be careful next time :)\nYour current score is : %d.\n", lastCheckDay - today, lostScore, userScore);
     }
+    //   set nextCheck to the next 8:00 am from current time
+    getNextCheckValue(currentTime);
+    nextCheck = getNextCheckValue(currentTime);
+    json_object_set_int64(usNextCheck, nextCheck);
 }
