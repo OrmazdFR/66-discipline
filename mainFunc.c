@@ -4,6 +4,12 @@
 #include <time.h>
 #include <string.h>
 
+#define clearCommand "clear"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define WHITE "\033[37m"
+
 int hmMin(time_t timeToCheck)
 {
     return timeToCheck / 60;
@@ -556,10 +562,177 @@ void displayWeek(unsigned short userId)
     }
 }
 
+void userCheck(unsigned short userId)
+{
+    time_t currentTime = time(NULL);
+    json_object *usjson;
+    json_object *users;
+    json_object *userContent;
+    json_object *usLastCheck;
+    json_object *usNextCheck;
+    json_object *usCycles;
+    json_object *usCycle;
+    json_object *usDays;
+    json_object *usDay;
+    json_object *usTasks;
+    json_object *usTask;
+    json_object *usTaskCat;
+    json_object *usTaskSub;
+    json_object *usTaskPriority;
+    json_object *usFirstDay;
+    json_object *usScore;
+    int usCycleIndex;
+    int usTaskAmount;
+    int usTaskIndex;
+    int taskPriority;
+    int64_t score;
+    int scoreModif = 0;
+    int firstDay;
+    int firstDayDay;
+    json_object *tajson;
+    json_object *taCategories;
+    json_object *taCategory;
+    json_object *taTasks;
+    json_object *taTask;
+    json_object *taTaskName;
+    json_object *taTaskScore;
+    int taCategoryIndex;
+    int taTaskIndex;
+    int taskScore;
+    int today;
+    int day;
+    json_object *usTaskDone;
+    int taskDone;
+    int taskChoice;
+    int statusChoice;
+    int exitCode;
+
+    // Users declarations
+    usjson = json_object_from_file("users.json");
+    json_object_object_get_ex(usjson, "users", &users);
+    userContent = json_object_array_get_idx(users, userId);
+    json_object_object_get_ex(userContent, "cycles", &usCycles);
+    json_object_object_get_ex(userContent, "firstDay", &usFirstDay);
+    firstDay = json_object_get_int64(usFirstDay);
+    firstDayDay = whourInDay(firstDay) <= 8 ? hmDays(firstDay) - 1 : hmDays(firstDay);
+    today = whourInDay(currentTime) <= 8 ? hmDays(currentTime) - 1 : hmDays(currentTime);
+
+    // Tasks declarations
+    tajson = json_object_from_file("tasks.json");
+    json_object_object_get_ex(tajson, "categories", &taCategories);
+    usCycleIndex = (today - firstDayDay) / 7;
+    //Get into the good cycle
+    usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
+
+    //Check the good day
+    day = (today - firstDayDay) % 7;
+    json_object_object_get_ex(usCycle, "days", &usDays);
+    usDay = json_object_array_get_idx(usDays, day);
+
+    //Get to the tasks
+    json_object_object_get_ex(usDay, "tasks", &usTasks);
+    usTaskAmount = json_object_array_length(usTasks);
+    do
+    {
+        printf("What have you finished today ?\n");
+        //Return every task
+        for (usTaskIndex = 0; usTaskIndex < usTaskAmount; usTaskIndex++)
+        {
+            usTask = json_object_array_get_idx(usTasks, usTaskIndex);
+            json_object_object_get_ex(usTask, "taskCat", &usTaskCat);
+            taCategoryIndex = json_object_get_int(usTaskCat);
+            json_object_object_get_ex(usTask, "taskSub", &usTaskSub);
+            json_object_object_get_ex(usTask, "taskDone", &usTaskDone);
+            json_object_object_get_ex(usTask, "taskPriority", &usTaskPriority);
+            taskDone = json_object_get_int(usTaskDone);
+            taTaskIndex = json_object_get_int(usTaskSub);
+            taskPriority = json_object_get_int(usTaskPriority);
+            json_object_object_get_ex(userContent, "score", &usScore);
+            score = json_object_get_int64(usScore);
+
+            //check the taskCat (category) and taskCyId (taskId) in the tasks.json to retreive the taskScore
+            taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
+            json_object_object_get_ex(taCategory, "tasks", &taTasks);
+            taTask = json_object_array_get_idx(taTasks, taTaskIndex);
+            json_object_object_get_ex(taTask, "taskName", &taTaskName);
+            json_object_object_get_ex(taTask, "taskScore", &taTaskScore);
+            taskScore = json_object_get_int(taTaskScore);
+
+            if (taskPriority == 1)
+            {
+                scoreModif = 2 * taskScore;
+            }
+            else
+            {
+                scoreModif = taskScore;
+            }
+
+            //Prints the task
+            if (taskDone == 0)
+                printf(RED "%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
+            if (taskDone == 1)
+                printf(GREEN "%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
+            if (taskDone == 2)
+                printf("%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
+        }
+        printf("999. Cancel\n");
+        scanf("%d", &taskChoice);
+        if (taskChoice != 999)
+        {
+            printf("\nWhat value ?\n1. " GREEN "Done" RESET "\n2. " RED "Failed" RESET "\n3. Cancel\n");
+            scanf("%d", &statusChoice);
+            if (statusChoice < 3)
+            {
+                statusChoice = (statusChoice == 1) ? 1 : 0;
+                if (statusChoice != taskDone)
+                {
+                    if (statusChoice == 0)
+                    {
+                        if (taskPriority != 3)
+                        {
+                            if (score - scoreModif < 0)
+                            {
+                                score = 0;
+                            }
+                            else
+                            {
+                                score = score - scoreModif;
+                            }
+                            printf("Oh... You lost " RED "%d" RESET " points...\nYour new score is " RED "%ld" RESET "\n", scoreModif, score);
+                        }
+                    }
+                    else
+                    {
+                        score += scoreModif;
+                        printf("Congratulations! You won " GREEN "%d" RESET " points !\nYour new score is " GREEN "%ld" RESET "\n", scoreModif, score);
+                    }
+
+                    usTask = json_object_array_get_idx(usTasks, taskChoice - 1);
+                    json_object_object_get_ex(usTask, "taskDone", &usTaskDone);
+                    json_object_set_int(usTaskDone, statusChoice);
+                    json_object_set_int64(usScore, score);
+                } else {
+                    printf(RED "You can't set the same status.\n" RESET);
+                }
+            }
+        }
+        printf("\nStop choosing tasks ?\n999. Stop\nAnything else to continue");
+        scanf("%d", &exitCode);
+        system(clearCommand);
+    } while (exitCode != 999);
+    json_object_object_get_ex(userContent, "lastCheck", &usLastCheck);
+    json_object_set_int64(usLastCheck, currentTime);
+    json_object_object_get_ex(userContent, "nextCheck", &usNextCheck);
+    json_object_set_int64(usNextCheck, getNextCheckValue(currentTime));
+    json_object_to_file_ext("users.json", usjson, JSON_C_TO_STRING_PRETTY);
+}
+
 int main(int argc, char **argv)
 {
     unsigned short chosenUser = 1;
     // json_object *arrayUser;
+
+    system(clearCommand);
     //     short usersArray[10] = displayUsers(0);
     //     int lostScore = 0;
     //     time_t currentTimeT = time(NULL);
@@ -577,7 +750,7 @@ int main(int argc, char **argv)
     // arrayUser = displayUsers(1);
     // printf("\n");
     // json_object_to_json_string_ext(arrayUser, JSON_C_TO_STRING_PRETTY);
-    displayWeek(chosenUser);
+    userCheck(chosenUser);
     // printf("hi")
     // createUser();
     return EXIT_SUCCESS;
