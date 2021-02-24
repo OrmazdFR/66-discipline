@@ -48,30 +48,6 @@ time_t getNextCheckValue(time_t currentTime)
     }
 }
 
-int main(int argc, char **argv)
-{
-    printf("Hello World!");
-    // unsigned short chosenUser = 65532;
-    // short usersArray[10] = displayUsers(0);
-    // int lostScore = 0;
-    // time_t currentTimeT = time(NULL);
-
-    // //Homepage displayed with icon
-    // //If user.s are detected
-    // if (usersArray[0] >= 0)
-    // {
-    //     do
-    //     {
-    //         displayUsers(1);
-    //     } while (chosenUser == 65532);
-    //     displayUser(chosenUser);
-    // }
-
-    //Create new user (button)
-    // > createUser();
-    return EXIT_SUCCESS;
-}
-
 json_object *weekPlanning()
 {
     json_object *dayId;
@@ -119,7 +95,7 @@ json_object *weekPlanning()
             taskObject = json_object_new_object();
             taskCyId++;
             //Display the day number
-            printf("Day %d", day);
+            printf("Day %d", day + 1);
 
             //User can choose a category (Sports, Health, Finance... from in tasks.json)
             printf("\nChoose from one of these categories :");
@@ -132,7 +108,7 @@ json_object *weekPlanning()
             printf("\n999. Cancel.\n");
             scanf("%d", &categoryChoice);
 
-            if (categoryChoice != 999)
+            if ((categoryChoice != 999))
             {
                 //Then he chooses the task from the category (display from tasks.json)
                 category = json_object_array_get_idx(categories, categoryChoice - 1);
@@ -149,14 +125,14 @@ json_object *weekPlanning()
                 scanf("%d", &taskChoice);
             }
 
-            if (categoryChoice != 999 || taskChoice != 999)
+            if ((categoryChoice != 999) && (taskChoice != 999))
             {
                 //And he chooses if it's Mandatory, Normal or Optional (see README.md). Explain what these things mean everytime
                 printf("\nNow you have to choose is the task is :\n1. Mandatory : You win a lot of points if you do it, but lose a lot if you don't\n2. Normal : You win a basic amount of points if you do it, bot lose some if you don't\n3. Optional : You a few points if you do them, but don't lose points if you don't (bonus)");
                 printf("\n999. Cancel and end the day.\n");
                 scanf("%d", &priority);
             }
-            if (categoryChoice != 999 || taskChoice != 999 || priority != 999)
+            if ((categoryChoice != 999) && (taskChoice != 999) && (priority != 999))
             {
                 taskCy = json_object_new_int(taskCyId);
                 json_object_object_add(taskObject, "taskCyId", taskCy);
@@ -192,6 +168,7 @@ json_object *weekPlanning()
 void createUser()
 {
     json_object *usjson;
+    json_object *usObject;
     json_object *users;
     json_object *newUser;
     json_object *userId;
@@ -218,19 +195,10 @@ void createUser()
     printf("\nCreate a new user");
     //Creating a new user in the file "users.json".
     usjson = json_object_from_file("users.json");
+    usObject = json_object_new_object();
     json_object_object_get_ex(usjson, "users", &users);
 
-    /**
-     * This wall is basically 
-     * a friendly reminder that
-     * I need to append 
-     * the following value
-     * to the array users.
-     * 
-     * I will not take it off
-     * until I finally append it
-     */
-    newUser = json_object_new_object(); // Yes, I'm talking about this value
+    newUser = json_object_new_object();
 
     //Auto-increment userId.
     userAmount = json_object_array_length(users);
@@ -248,7 +216,7 @@ void createUser()
     json_object_object_add(newUser, "firstname", firstname);
 
     //Ask for last name (lastname)
-    printf("\nLastname : ");
+    printf("Lastname : ");
     scanf("%s", fsLastname);
     lastname = json_object_new_string(fsLastname);
     json_object_object_add(newUser, "lastname", lastname);
@@ -271,7 +239,7 @@ void createUser()
     json_object_object_add(newUser, "nextCheck", nextCheck);
 
     //Ask for cycle amount (default = 10, can select between 1 and 52) (cycleAmount)
-    printf("\nHow many cycles ? (between 1 and 52) : ");
+    printf("How many cycles ? (between 1 and 52) : ");
     scanf("%d", &fsCycleAmount);
     cycleAmount = json_object_new_int(fsCycleAmount);
     json_object_object_add(newUser, "cycleAmount", cycleAmount);
@@ -287,16 +255,25 @@ void createUser()
     cycleId = json_object_new_int(1);
     json_object_object_add(cycleObject, "cycleId", cycleId);
 
-    //The user will then have to fill his first cycle (week) => weekPlanning();
+    //The user will then have to fill his first cycle (week) =>  ();
     days = json_object_new_array();
     days = weekPlanning();
     json_object_object_add(cycleObject, "days", days);
 
     //Adds the cycleObject to the cycles array
-    json_object_array_add(cycles, days);
+    json_object_array_add(cycles, cycleObject);
 
     // FINALLY appending newUser
     json_object_array_add(users, newUser);
+
+    // Appending users to the global object
+    json_object_object_add(usObject, "users", users);
+
+    // Appending it to the file
+    json_object_to_file("users.json", usObject);
+
+    // Frees the users.json
+    json_object_put(usjson);
 }
 
 void deleteUser(unsigned short userId)
@@ -352,10 +329,9 @@ json_object *displayUsers(unsigned char doOutput)
             //Display the number, firstname, lastname and score IF output != 0
             if (doOutput > 0)
             {
-                printf("%hu. %s %s - %I64ld\n", goodUsersAmount, json_object_get_string(firstname), json_object_get_string(lastname), json_object_get_int64(score));
+                printf("%hu. %s %s - %lld\n", ++goodUsersAmount, json_object_get_string(firstname), json_object_get_string(lastname), (long long)json_object_get_int64(score));
             }
             json_object_array_add(userIds, json_object_new_int(i));
-            goodUsersAmount++;
         }
     }
     return userIds;
@@ -366,6 +342,7 @@ void autoCheck(unsigned short userId)
     //__ users
     json_object *usjson;
     json_object *users;
+    json_object *usObject;
     json_object *userContent;
     json_object *usScore;
     int userScore = 0;
@@ -411,6 +388,7 @@ void autoCheck(unsigned short userId)
 
     // Users declarations
     usjson = json_object_from_file("users.json");
+    usObject = json_object_new_object();
     json_object_object_get_ex(usjson, "users", &users);
     userContent = json_object_array_get_idx(users, userId);
     json_object_object_get_ex(userContent, "score", &usScore);
@@ -499,4 +477,30 @@ void autoCheck(unsigned short userId)
     getNextCheckValue(currentTime);
     nextCheck = getNextCheckValue(currentTime);
     json_object_set_int64(usNextCheck, nextCheck);
+    json_object_to_file_ext("users.json", usjson, JSON_C_TO_STRING_PRETTY);
+}
+
+int main(int argc, char **argv)
+{
+    unsigned short chosenUser = 1;
+    json_object *arrayUser;
+    //     short usersArray[10] = displayUsers(0);
+    //     int lostScore = 0;
+    //     time_t currentTimeT = time(NULL);
+
+    //     //Homepage displayed with icon
+    //     //If user.s are detected
+    //     if (usersArray[0] >= 0)
+    //     {
+    //         do
+    //         {
+    //             displayUsers(1);
+    //         } while (chosenUser == 65532);
+    //         displayUser(chosenUser);
+    //     }
+    arrayUser = displayUsers(1);
+    printf("\n");
+    json_object_to_json_string_ext(arrayUser, JSON_C_TO_STRING_PRETTY);
+    // createUser();
+    return EXIT_SUCCESS;
 }

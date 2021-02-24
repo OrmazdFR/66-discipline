@@ -1,6 +1,356 @@
 {
-    "users": [{
-        "userId": 0,
-        "enabled": false
-    }]
+  "users": [{
+      "userId": 0,
+      "enabled": false
+    },
+    {
+      "userId": 1,
+      "enabled": true,
+      "firstname": "Paul",
+      "lastname": "Bisset",
+      "score": 100,
+      "firstDay": 1613951538,
+      "lastCheck": 1613951538,
+      "nextCheck": 1614150000,
+      "cycleAmount": 2,
+      "cycles": [{
+        "cycleId": 1,
+        "days": [{
+            "dayId": 0,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 0,
+              "taskSub": 0,
+              "taskPriority": 0,
+              "taskDone": 0
+            }]
+          },
+          {
+            "dayId": 1,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 1,
+              "taskSub": 1,
+              "taskPriority": 1,
+              "taskDone": 0
+            }]
+          },
+          {
+            "dayId": 2,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 2,
+              "taskSub": 2,
+              "taskPriority": 2,
+              "taskDone": 2
+            }]
+          },
+          {
+            "dayId": 3,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 0,
+                "taskSub": 1,
+                "taskPriority": 2,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 1,
+                "taskPriority": 0,
+                "taskDone": 2
+              }
+            ]
+          },
+          {
+            "dayId": 4,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 1,
+              "taskSub": 3,
+              "taskPriority": 2,
+              "taskDone": 2
+            }]
+          },
+          {
+            "dayId": 5,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 0,
+              "taskSub": 0,
+              "taskPriority": 0,
+              "taskDone": 2
+            }]
+          },
+          {
+            "dayId": 6,
+            "tasks": [{
+              "taskCyId": 1,
+              "taskCat": 1,
+              "taskSub": 0,
+              "taskPriority": 0,
+              "taskDone": 2
+            }]
+          }
+        ]
+      }]
+    }, {
+      "userId": 2,
+      "enabled": true,
+      "firstname": "John",
+      "lastname": "DOE",
+      "score": 4565,
+      "firstDay": 1611360005,
+      "lastCheck": 1611400465,
+      "nextCheck": 1611471600,
+      "cycleAmount": 10,
+      "cycles": [{
+        "cycleId": 1,
+        "days": [{
+            "dayId": 1,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 2,
+                "taskSub": 5,
+                "taskPriority": 1,
+                "taskDone": 1
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 0
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 1
+              }
+            ]
+          },
+          {
+            "dayId": 2,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 4,
+                "taskSub": 2,
+                "taskPriority": 3,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              }
+            ]
+          }
+        ]
+      }]
+    }, {
+      "userId": 3,
+      "enabled": true,
+      "firstname": "Jean",
+      "lastname": "Faie",
+      "score": 4565,
+      "firstDay": 1611360005,
+      "lastCheck": 1611400465,
+      "nextCheck": 1611471600,
+      "cycleAmount": 10,
+      "cycles": [{
+        "cycleId": 1,
+        "days": [{
+            "dayId": 1,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 2,
+                "taskSub": 5,
+                "taskPriority": 1,
+                "taskDone": 1
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 0
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 1
+              }
+            ]
+          },
+          {
+            "dayId": 2,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 4,
+                "taskSub": 2,
+                "taskPriority": 3,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              }
+            ]
+          }
+        ]
+      }]
+    }, {
+      "userId": 4,
+      "enabled": false,
+      "firstname": "Jean",
+      "lastname": "DOE",
+      "score": 4565,
+      "firstDay": 1611360005,
+      "lastCheck": 1611400465,
+      "nextCheck": 1611471600,
+      "cycleAmount": 10,
+      "cycles": [{
+        "cycleId": 1,
+        "days": [{
+            "dayId": 1,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 2,
+                "taskSub": 5,
+                "taskPriority": 1,
+                "taskDone": 1
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 0
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 1
+              }
+            ]
+          },
+          {
+            "dayId": 2,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 4,
+                "taskSub": 2,
+                "taskPriority": 3,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              }
+            ]
+          }
+        ]
+      }]
+    }, {
+      "userId": 5,
+      "enabled": true,
+      "firstname": "Peter",
+      "lastname": "Capaldi",
+      "score": 4565,
+      "firstDay": 1611360005,
+      "lastCheck": 1611400465,
+      "nextCheck": 1611471600,
+      "cycleAmount": 10,
+      "cycles": [{
+        "cycleId": 1,
+        "days": [{
+            "dayId": 1,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 2,
+                "taskSub": 5,
+                "taskPriority": 1,
+                "taskDone": 1
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 0
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 1
+              }
+            ]
+          },
+          {
+            "dayId": 2,
+            "tasks": [{
+                "taskCyId": 1,
+                "taskCat": 4,
+                "taskSub": 2,
+                "taskPriority": 3,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 2,
+                "taskCat": 2,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              },
+              {
+                "taskCyId": 3,
+                "taskCat": 1,
+                "taskSub": 4,
+                "taskPriority": 2,
+                "taskDone": 2
+              }
+            ]
+          }
+        ]
+      }]
+    }
+  ]
 }

@@ -1,0 +1,89 @@
+{
+    "users": [{
+        "userId": 0,
+        "enabled": false
+    }, {
+        "userId": 1,
+        "enabled": true,
+        "firstname": "Paul",
+        "lastname": "Bisset",
+        "score": 100,
+        "firstDay": 1614124074,
+        "lastCheck": 1614124074,
+        "nextCheck": 1614150000,
+        "cycleAmount": 2,
+        "cycles": [{
+            "cycleId": 1,
+            "days": [{
+                "dayId": 0,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 0,
+                    "taskSub": 0,
+                    "taskPriority": 0,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 1,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 1,
+                    "taskSub": 1,
+                    "taskPriority": 1,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 2,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 2,
+                    "taskSub": 2,
+                    "taskPriority": 2,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 3,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 0,
+                    "taskSub": 1,
+                    "taskPriority": 2,
+                    "taskDone": 2
+                }, {
+                    "taskCyId": 2,
+                    "taskCat": 2,
+                    "taskSub": 1,
+                    "taskPriority": 0,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 4,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 1,
+                    "taskSub": 3,
+                    "taskPriority": 2,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 5,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 0,
+                    "taskSub": 0,
+                    "taskPriority": 0,
+                    "taskDone": 2
+                }]
+            }, {
+                "dayId": 6,
+                "tasks": [{
+                    "taskCyId": 1,
+                    "taskCat": 1,
+                    "taskSub": 0,
+                    "taskPriority": 0,
+                    "taskDone": 2
+                }]
+            }]
+        }]
+    }]
+}
