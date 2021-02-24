@@ -9,16 +9,7 @@
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define WHITE "\033[37m"
-
-int hmMin(time_t timeToCheck)
-{
-    return timeToCheck / 60;
-}
-
-int hmHours(time_t timeToCheck)
-{
-    return timeToCheck / (60 * 60);
-}
+#define BLUE "\033[0;34m"
 
 int hmDays(time_t timeToCheck)
 {
@@ -92,6 +83,7 @@ json_object *weekPlanning()
 
     for (day = 0; day < 7; day++)
     {
+        system(clearCommand);
         dayObject = json_object_new_object();
         userTasks = json_object_new_array();
         taskCyId = 0;
@@ -101,7 +93,7 @@ json_object *weekPlanning()
             taskObject = json_object_new_object();
             taskCyId++;
             //Display the day number
-            printf("Day %d", day + 1);
+            printf(GREEN "Day %d" RESET, day + 1);
 
             //User can choose a category (Sports, Health, Finance... from in tasks.json)
             printf("\nChoose from one of these categories :");
@@ -149,7 +141,7 @@ json_object *weekPlanning()
                 taskSub = json_object_new_int(taskChoice - 1);
                 json_object_object_add(taskObject, "taskSub", taskSub);
 
-                taskPriority = json_object_new_int(priority - 1);
+                taskPriority = json_object_new_int(priority);
                 json_object_object_add(taskObject, "taskPriority", taskPriority);
 
                 taskDone = json_object_new_int(2);
@@ -157,7 +149,7 @@ json_object *weekPlanning()
 
                 json_object_array_add(userTasks, taskObject);
             }
-            printf("\n999. End day. Anything else will ask you to choose another category then task.");
+            printf("\n999. End day. Anything else will ask you to choose another category then task.\n");
             scanf("%d", &exitCode);
         } while (exitCode != 999);
 
@@ -171,7 +163,7 @@ json_object *weekPlanning()
     return days;
 }
 
-void createUser()
+unsigned short createUser()
 {
     json_object *usjson;
     json_object *usObject;
@@ -197,8 +189,9 @@ void createUser()
     time_t currentTime = time(NULL);
     time_t nextCheckValue;
 
+    system(clearCommand);
     //Display a new page to register the user
-    printf("\nCreate a new user");
+    printf(RED "Create a new user" RESET);
     //Creating a new user in the file "users.json".
     usjson = json_object_from_file("users.json");
     usObject = json_object_new_object();
@@ -228,7 +221,7 @@ void createUser()
     json_object_object_add(newUser, "lastname", lastname);
 
     //Set "score" to 100 (score)
-    score = json_object_new_int64(100);
+    score = json_object_new_int64(1000);
     json_object_object_add(newUser, "score", score);
 
     //Set "firstDay" to current time :
@@ -276,10 +269,11 @@ void createUser()
     json_object_object_add(usObject, "users", users);
 
     // Appending it to the file
-    json_object_to_file("users.json", usObject);
+    json_object_to_file_ext("users.json", usObject, JSON_C_TO_STRING_PRETTY);
 
     // Frees the users.json
     json_object_put(usjson);
+    return userAmount;
 }
 
 void deleteUser(unsigned short userId)
@@ -301,14 +295,13 @@ void deleteUser(unsigned short userId)
     json_object_set_boolean(enabledField, 0);
 }
 
-json_object *displayUsers(unsigned char doOutput)
+void displayUsers(unsigned char doOutput)
 {
     unsigned short goodUsersAmount = 0;
     unsigned short i;
     unsigned short usersAmount;
     json_object *usjson;
     json_object *users;
-    json_object *userIds;
     json_object *userContent;
     json_object *enabledField;
     json_object *firstname;
@@ -317,8 +310,6 @@ json_object *displayUsers(unsigned char doOutput)
 
     //Open users.json
     usjson = json_object_from_file("users.json");
-
-    userIds = json_object_new_array();
 
     //Retreive id of all users with "enabled" field set to 'true'
     json_object_object_get_ex(usjson, "users", &users);
@@ -337,10 +328,9 @@ json_object *displayUsers(unsigned char doOutput)
             {
                 printf("%hu. %s %s - %lld\n", ++goodUsersAmount, json_object_get_string(firstname), json_object_get_string(lastname), (long long)json_object_get_int64(score));
             }
-            json_object_array_add(userIds, json_object_new_int(i));
         }
     }
-    return userIds;
+    return;
 }
 
 void autoCheck(unsigned short userId)
@@ -354,6 +344,7 @@ void autoCheck(unsigned short userId)
     json_object *usCycles;
     json_object *usCycle;
     int usCycleIndex = 0;
+    int usCycleAmount;
     json_object *usDays;
     json_object *usDay;
     int usDayIndex = 0;
@@ -389,6 +380,7 @@ void autoCheck(unsigned short userId)
     json_object *taTaskScore;
     int taskScore;
     //__ other vars
+    json_object *newDays;
     int lostScore = 0;
 
     // Users declarations
@@ -466,13 +458,35 @@ void autoCheck(unsigned short userId)
         //   display a message saying that the user lost lostScore by not validating his discipline in the app, and that he's absentDays late in his discipline
         userScore = json_object_get_int(usScore);
         userScore = (userScore - lostScore < 0) ? 0 : userScore - lostScore;
-        printf("\nOh no! You were absent for %d days, and you lost %d points... Be careful next time :)\nYour current score is : %d.\n", lastCheckDay - today, lostScore, userScore);
+        printf("\nOh no! You were absent for %d days, and you lost" RED "%d" RESET " points... Be careful next time :)\nYour current score is : " GREEN "%d" RESET ".\n", lastCheckDay - today, lostScore, userScore);
     }
+
+    // if today = usDayIndex == 7, weekPlanning;
+    usCycleIndex = (today - firstDayDay) / 7;
+    usDayIndex = (today - firstDayDay) % 7;
+
+    //Get into the good cycle
+    usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
+
+    //Check the good day
+    json_object_object_get_ex(usCycle, "days", &usDays);
+    usDay = json_object_array_get_idx(usDays, usDayIndex);
+    if (usDayIndex == 7)
+    {
+        usCycleAmount = json_object_array_length(usCycles);
+        usCycleAmount++;
+        usCycle = json_object_new_object();
+        json_object_object_add(usCycle, "cycleId", json_object_new_int(usCycleAmount));
+        newDays = weekPlanning();
+        json_object_object_add(usCycle, "days", newDays);
+    }
+
     //   set nextCheck to the next 8:00 am from current time
     getNextCheckValue(currentTime);
     nextCheck = getNextCheckValue(currentTime);
     json_object_set_int64(usNextCheck, nextCheck);
     json_object_to_file_ext("users.json", usjson, JSON_C_TO_STRING_PRETTY);
+    return;
 }
 
 void displayWeek(unsigned short userId)
@@ -540,7 +554,7 @@ void displayWeek(unsigned short userId)
         json_object_object_get_ex(usDay, "tasks", &usTasks);
         usTaskAmount = json_object_array_length(usTasks);
 
-        printf("Day %d.", day);
+        printf(GREEN "Day %d." RESET, day + 1);
 
         //Check every task
         for (usTaskIndex = 0; usTaskIndex < usTaskAmount; usTaskIndex++)
@@ -560,6 +574,7 @@ void displayWeek(unsigned short userId)
         }
         printf("\n__________\n");
     }
+    return;
 }
 
 void userCheck(unsigned short userId)
@@ -632,6 +647,7 @@ void userCheck(unsigned short userId)
     //Get to the tasks
     json_object_object_get_ex(usDay, "tasks", &usTasks);
     usTaskAmount = json_object_array_length(usTasks);
+    system(clearCommand);
     do
     {
         printf("What have you finished today ?\n");
@@ -673,12 +689,29 @@ void userCheck(unsigned short userId)
             if (taskDone == 1)
                 printf(GREEN "%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
             if (taskDone == 2)
-                printf("%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
+                printf(BLUE "%d. %s\n" RESET, usTaskIndex + 1, json_object_get_string(taTaskName));
         }
         printf("999. Cancel\n");
         scanf("%d", &taskChoice);
         if (taskChoice != 999)
         {
+            usTask = json_object_array_get_idx(usTasks, taskChoice - 1);
+            json_object_object_get_ex(usTask, "taskCat", &usTaskCat);
+            taCategoryIndex = json_object_get_int(usTaskCat);
+            json_object_object_get_ex(usTask, "taskSub", &usTaskSub);
+            taTaskIndex = json_object_get_int(usTaskSub);
+            json_object_object_get_ex(usTask, "taskDone", &usTaskDone);
+            taskDone = json_object_get_int(usTaskDone);
+            json_object_object_get_ex(usTask, "taskPriority", &usTaskPriority);
+            taskPriority = json_object_get_int(usTaskPriority);
+
+            //check the taskCat (category) and taskCyId (taskId) in the tasks.json to retreive the taskScore
+            taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
+            json_object_object_get_ex(taCategory, "tasks", &taTasks);
+            taTask = json_object_array_get_idx(taTasks, taTaskIndex);
+            json_object_object_get_ex(taTask, "taskScore", &taTaskScore);
+            taskScore = json_object_get_int(taTaskScore);
+
             printf("\nWhat value ?\n1. " GREEN "Done" RESET "\n2. " RED "Failed" RESET "\n3. Cancel\n");
             scanf("%d", &statusChoice);
             if (statusChoice < 3)
@@ -686,6 +719,15 @@ void userCheck(unsigned short userId)
                 statusChoice = (statusChoice == 1) ? 1 : 0;
                 if (statusChoice != taskDone)
                 {
+                    if (taskPriority == 1)
+                    {
+                        scoreModif = 2 * taskScore;
+                    }
+                    else
+                    {
+                        scoreModif = taskScore;
+                    }
+
                     if (statusChoice == 0)
                     {
                         if (taskPriority != 3)
@@ -700,6 +742,18 @@ void userCheck(unsigned short userId)
                             }
                             printf("Oh... You lost " RED "%d" RESET " points...\nYour new score is " RED "%ld" RESET "\n", scoreModif, score);
                         }
+                        else
+                        {
+                            if (taskDone == 1)
+                            {
+                                score = score - scoreModif;
+                                printf("You lost the " RED "%d" RESET " points you got by doing it.\nYour new score is " RED "%ld" RESET "\n", scoreModif, score);
+                            }
+                            else
+                            {
+                                printf("Oh... Well, that was optional anyway. \nYour score is still " GREEN "%ld" RESET "\n", score);
+                            }
+                        }
                     }
                     else
                     {
@@ -711,7 +765,9 @@ void userCheck(unsigned short userId)
                     json_object_object_get_ex(usTask, "taskDone", &usTaskDone);
                     json_object_set_int(usTaskDone, statusChoice);
                     json_object_set_int64(usScore, score);
-                } else {
+                }
+                else
+                {
                     printf(RED "You can't set the same status.\n" RESET);
                 }
             }
@@ -727,31 +783,52 @@ void userCheck(unsigned short userId)
     json_object_to_file_ext("users.json", usjson, JSON_C_TO_STRING_PRETTY);
 }
 
+void userMenu(unsigned short userId)
+{
+    int menuChoice;
+    autoCheck(userId);
+    do
+    {
+        printf("\nWhat do you want to do ?");
+        printf("\n1. Check your tasks");
+        printf("\n2. Delete user");
+        printf("\n3. Display my week planning");
+        printf("\n4. Back to main menu\n");
+        scanf("%d", &menuChoice);
+        switch (menuChoice)
+        {
+        case 1:
+            userCheck(userId);
+            break;
+        case 2:
+            deleteUser(userId);
+            break;
+        case 3:
+            displayWeek(userId);
+            break;
+        }
+    } while (menuChoice != 4);
+}
+
 int main(int argc, char **argv)
 {
-    unsigned short chosenUser = 1;
-    // json_object *arrayUser;
+    unsigned short chosenUser;
+    do
+    {
+        system(clearCommand);
+        printf(RED "Welcome !" RESET "\nPlease, choose an user :\n");
+        displayUsers(1);
+        printf("\n999. Create user\n123456. Exit\n");
+        scanf("%hu", &chosenUser);
+        if (chosenUser != 999 && chosenUser != 123456)
+        {
+            userMenu(chosenUser);
+        }
+        else if (chosenUser == 999)
+        {
+            chosenUser = createUser();
+        }
+    } while (chosenUser != 123456);
 
-    system(clearCommand);
-    //     short usersArray[10] = displayUsers(0);
-    //     int lostScore = 0;
-    //     time_t currentTimeT = time(NULL);
-
-    //     //Homepage displayed with icon
-    //     //If user.s are detected
-    //     if (usersArray[0] >= 0)
-    //     {
-    //         do
-    //         {
-    //             displayUsers(1);
-    //         } while (chosenUser == 65532);
-    //         displayUser(chosenUser);
-    //     }
-    // arrayUser = displayUsers(1);
-    // printf("\n");
-    // json_object_to_json_string_ext(arrayUser, JSON_C_TO_STRING_PRETTY);
-    userCheck(chosenUser);
-    // printf("hi")
-    // createUser();
     return EXIT_SUCCESS;
 }
