@@ -342,7 +342,6 @@ void autoCheck(unsigned short userId)
     //__ users
     json_object *usjson;
     json_object *users;
-    json_object *usObject;
     json_object *userContent;
     json_object *usScore;
     int userScore = 0;
@@ -388,17 +387,10 @@ void autoCheck(unsigned short userId)
 
     // Users declarations
     usjson = json_object_from_file("users.json");
-    usObject = json_object_new_object();
     json_object_object_get_ex(usjson, "users", &users);
     userContent = json_object_array_get_idx(users, userId);
     json_object_object_get_ex(userContent, "score", &usScore);
     json_object_object_get_ex(userContent, "cycles", &usCycles);
-    usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
-    json_object_object_get_ex(usCycle, "days", &usDays);
-    usDay = json_object_array_get_idx(usDays, usDayIndex);
-    json_object_object_get_ex(usDay, "tasks", &usTasks);
-    usTaskAmount = json_object_array_length(usTasks);
-    usTask = json_object_array_get_idx(usTasks, usTaskIndex);
 
     json_object_object_get_ex(userContent, "firstDay", &usFirstDay);
     firstDay = json_object_get_int64(usFirstDay);
@@ -416,9 +408,6 @@ void autoCheck(unsigned short userId)
     // Tasks declarations
     tajson = json_object_from_file("tasks.json");
     json_object_object_get_ex(tajson, "categories", &taCategories);
-    taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
-    json_object_object_get_ex(taCategory, "tasks", &taTasks);
-    taTask = json_object_array_get_idx(taTasks, taTaskIndex);
 
     if (currentTime > nextCheck)
     {
@@ -480,10 +469,97 @@ void autoCheck(unsigned short userId)
     json_object_to_file_ext("users.json", usjson, JSON_C_TO_STRING_PRETTY);
 }
 
+void displayWeek(unsigned short userId)
+{
+    time_t currentTime = time(NULL);
+    json_object *usjson;
+    json_object *users;
+    json_object *userContent;
+    json_object *usCycles;
+    json_object *usCycle;
+    json_object *usDays;
+    json_object *usDay;
+    json_object *usTasks;
+    json_object *usTask;
+    json_object *usTaskCat;
+    json_object *usTaskSub;
+    json_object *usFirstDay;
+    int usCycleIndex = 0;
+    int usTaskAmount;
+    int usTaskIndex = 0;
+    int firstDay;
+    int firstDayDay;
+
+    json_object *tajson;
+    json_object *taCategories;
+    json_object *taCategory;
+    json_object *taTasks;
+    json_object *taTask;
+    json_object *taTaskName;
+    int taCategoryIndex = 0;
+    int taTaskIndex = 0;
+
+    int day;
+    int today;
+
+    // Users declarations
+    usjson = json_object_from_file("users.json");
+    json_object_object_get_ex(usjson, "users", &users);
+    userContent = json_object_array_get_idx(users, userId);
+    json_object_object_get_ex(userContent, "cycles", &usCycles);
+
+    json_object_object_get_ex(userContent, "firstDay", &usFirstDay);
+    firstDay = json_object_get_int64(usFirstDay);
+    firstDayDay = whourInDay(firstDay) <= 8 ? hmDays(firstDay) - 1 : hmDays(firstDay);
+
+    today = whourInDay(currentTime) <= 8 ? hmDays(currentTime) - 1 : hmDays(currentTime);
+
+    // Tasks declarations
+    tajson = json_object_from_file("tasks.json");
+    json_object_object_get_ex(tajson, "categories", &taCategories);
+
+    usCycleIndex = (today - firstDayDay) / 7;
+
+    for (day = 0; day < 7; day++)
+    {
+
+        //Get into the good cycle
+        usCycle = json_object_array_get_idx(usCycles, usCycleIndex);
+
+        //Check the good day
+        json_object_object_get_ex(usCycle, "days", &usDays);
+        usDay = json_object_array_get_idx(usDays, day);
+
+        //Get to the tasks
+        json_object_object_get_ex(usDay, "tasks", &usTasks);
+        usTaskAmount = json_object_array_length(usTasks);
+
+        printf("Day %d.", day);
+
+        //Check every task
+        for (usTaskIndex = 0; usTaskIndex < usTaskAmount; usTaskIndex++)
+        {
+            usTask = json_object_array_get_idx(usTasks, usTaskIndex);
+            json_object_object_get_ex(usTask, "taskCat", &usTaskCat);
+            taCategoryIndex = json_object_get_int(usTaskCat);
+            json_object_object_get_ex(usTask, "taskSub", &usTaskSub);
+            taTaskIndex = json_object_get_int(usTaskSub);
+
+            //  check the taskCat (category) and taskCyId (taskId) in the tasks.json to retreive the taskScore
+            taCategory = json_object_array_get_idx(taCategories, taCategoryIndex);
+            json_object_object_get_ex(taCategory, "tasks", &taTasks);
+            taTask = json_object_array_get_idx(taTasks, taTaskIndex);
+            json_object_object_get_ex(taTask, "taskName", &taTaskName);
+            printf("\n%s", json_object_get_string(taTaskName));
+        }
+        printf("\n__________\n");
+    }
+}
+
 int main(int argc, char **argv)
 {
     unsigned short chosenUser = 1;
-    json_object *arrayUser;
+    // json_object *arrayUser;
     //     short usersArray[10] = displayUsers(0);
     //     int lostScore = 0;
     //     time_t currentTimeT = time(NULL);
@@ -498,9 +574,11 @@ int main(int argc, char **argv)
     //         } while (chosenUser == 65532);
     //         displayUser(chosenUser);
     //     }
-    arrayUser = displayUsers(1);
-    printf("\n");
-    json_object_to_json_string_ext(arrayUser, JSON_C_TO_STRING_PRETTY);
+    // arrayUser = displayUsers(1);
+    // printf("\n");
+    // json_object_to_json_string_ext(arrayUser, JSON_C_TO_STRING_PRETTY);
+    displayWeek(chosenUser);
+    // printf("hi")
     // createUser();
     return EXIT_SUCCESS;
 }
